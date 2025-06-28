@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Modelo de Autenticação e Identidade
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  password  String
+  createdAt DateTime @default(now())
+
+  // Relações
+  profile Profile? // Um usuário tem um perfil (opcional)
+  offers  Offer[]  // Um usuário pode criar muitas ofertas
+}
+
+// Modelo de Perfil do Usuário
+model Profile {
+  id          String   @id @default(uuid())
+  bio         String?
+  course      String?
+  institution String?
+  avatarUrl   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relação 1-para-1 com User
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+
+  // Relação Muitos-para-Muitos com Tag para interesses
+  interests Tag[] @relation("ProfileInterests")
+}
+
+// Modelo de Oferta de Ajuda
+model Offer {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  createdAt   DateTime @default(now())
+
+  // Relação Muitos-para-Um com User (ofertante)
+  offererId String
+  offerer   User   @relation(fields: [offererId], references: [id])
+
+  // Relação Muitos-para-Muitos com Tag
+  tags Tag[]
+}
+
+// Modelo de Tags (Matérias, Tópicos)
+model Tag {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+
+  // Relação Muitos-para-Muitos com Offer
+  offers    Offer[]
+
+  // Relação Muitos-para-Muitos com Profile (interesses)
+  profiles Profile[] @relation("ProfileInterests")
+}
