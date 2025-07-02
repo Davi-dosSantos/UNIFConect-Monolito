@@ -2,29 +2,37 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import { prisma } from '../lib/prisma';
 import { CreateOfferInput } from '../schemas/offer.schema';
 
+const offerWithSubscriptionCount = {
+  include: {
+    offerer: {
+      select: { id: true, name: true },
+    },
+    tags: true,
+    _count: {
+      select: { subscriptions: true },
+    },
+  },
+};
+
 export async function createOfferHandler(
   request: FastifyRequest<{ Body: CreateOfferInput }>,
   reply: FastifyReply
 ) {
   try {
     const { id: userId } = request.user as { id: string };
-    const { title, description, tagIds } = request.body;
+    const { title, description, slots, tagIds } = request.body;
 
     const offer = await prisma.offer.create({
       data: {
         title,
         description,
+        slots,
         offererId: userId,
         tags: {
           connect: tagIds.map((id) => ({ id })),
         },
       },
-      include: {
-        offerer: {
-          select: { id: true, name: true },
-        },
-        tags: true,
-      },
+      ...offerWithSubscriptionCount,
     });
 
     return reply.status(201).send(offer);
@@ -37,12 +45,7 @@ export async function createOfferHandler(
 export async function getOffersHandler(request: FastifyRequest, reply: FastifyReply) {
   try {
     const offers = await prisma.offer.findMany({
-      include: {
-        offerer: {
-          select: { id: true, name: true },
-        },
-        tags: true,
-      },
+      ...offerWithSubscriptionCount,
       orderBy: {
         createdAt: 'desc',
       },
@@ -54,6 +57,7 @@ export async function getOffersHandler(request: FastifyRequest, reply: FastifyRe
     return reply.status(500).send({ message: 'Erro ao buscar ofertas.' });
   }
 }
+
 
 export async function getOfferByIdHandler(
   request: FastifyRequest<{ Params: { offerId: string } }>,

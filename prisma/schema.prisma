@@ -7,7 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Modelo de Autenticação e Identidade
 model User {
   id        String   @id @default(uuid())
   email     String   @unique
@@ -15,12 +14,13 @@ model User {
   password  String
   createdAt DateTime @default(now())
 
-  // Relações
-  profile Profile? // Um usuário tem um perfil (opcional)
-  offers  Offer[]  // Um usuário pode criar muitas ofertas
+  profile       Profile?
+  offers        Offer[]
+  subscriptions Subscription[]
+  files         File[] // Um usuário pode fazer upload de muitos arquivos
+  resources     Resource[] // Um usuário pode criar muitos recursos
 }
 
-// Modelo de Perfil do Usuário
 model Profile {
   id          String   @id @default(uuid())
   bio         String?
@@ -30,39 +30,73 @@ model Profile {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  // Relação 1-para-1 com User
   userId String @unique
   user   User   @relation(fields: [userId], references: [id])
 
-  // Relação Muitos-para-Muitos com Tag para interesses
   interests Tag[] @relation("ProfileInterests")
 }
 
-// Modelo de Oferta de Ajuda
 model Offer {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  slots       Int
+  createdAt   DateTime @default(now())
+
+  offererId String
+  offerer   User   @relation(fields: [offererId], references: [id])
+
+  tags          Tag[]
+  subscriptions Subscription[]
+}
+
+model Tag {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+
+  offers    Offer[]
+  profiles  Profile[] @relation("ProfileInterests")
+  resources Resource[] // Uma tag pode estar em muitos recursos
+}
+
+model Subscription {
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  offerId   String
+  offer     Offer    @relation(fields: [offerId], references: [id])
+  @@id([userId, offerId])
+}
+
+model File {
+  id           String   @id @default(uuid())
+  originalName String   // Nome original do arquivo
+  storageKey   String   @unique // Nome único do arquivo salvo no servidor
+  path         String   // Caminho para o arquivo no servidor
+  mimeType     String   // Tipo do arquivo (ex: "application/pdf")
+  sizeInBytes  Int
+  createdAt    DateTime @default(now())
+
+  uploaderId String
+  uploader   User     @relation(fields: [uploaderId], references: [id])
+
+  resource Resource? // Um arquivo pertence a um recurso
+}
+
+model Resource {
   id          String   @id @default(uuid())
   title       String
   description String
   createdAt   DateTime @default(now())
 
-  // Relação Muitos-para-Um com User (ofertante)
-  offererId String
-  offerer   User   @relation(fields: [offererId], references: [id])
+  uploaderId String
+  uploader   User     @relation(fields: [uploaderId], references: [id])
 
-  // Relação Muitos-para-Muitos com Tag
-  tags Tag[]
-}
+  // Relação 1-para-1: Cada recurso tem exatamente um arquivo associado
+  fileId String  @unique
+  file   File    @relation(fields: [fileId], references: [id])
 
-// Modelo de Tags (Matérias, Tópicos)
-model Tag {
-  id        String   @id @default(uuid())
-  name      String   @unique
-  description String?
-  createdAt DateTime @default(now())
-
-  // Relação Muitos-para-Muitos com Offer
-  offers    Offer[]
-
-  // Relação Muitos-para-Muitos com Profile (interesses)
-  profiles Profile[] @relation("ProfileInterests")
+  tags Tag[] // Um recurso pode ter várias tags
 }
