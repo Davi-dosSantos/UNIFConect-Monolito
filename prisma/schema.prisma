@@ -57,6 +57,7 @@ model Offer {
 model Tag {
   id        String   @id @default(uuid())
   name      String   @unique
+  description String?
   createdAt DateTime @default(now())
 
   // Relação Muitos-para-Muitos com Offer

@@ -4,24 +4,34 @@ import cors from '@fastify/cors';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 
-// Importando os schemas e rotas que já criamos
 import { authSchemas } from './schemas/auth.schema';
-import { authRoutes } from './routes/auth.routes';
+import { userSchemas } from './schemas/user.schema';
+import { tagSchemas } from './schemas/tag.schema';
+import { offerSchemas } from './schemas/offer.schema';
 
-// A instância do Fastify é criada de forma mais simples
+import { authRoutes } from './routes/auth.routes';
+import { userRoutes } from './routes/user.routes';
+import { tagRoutes } from './routes/tag.routes';
+import { offerRoutes } from './routes/offer.routes';
+
 const app = fastify({
   logger: true,
 });
 
 async function start() {
-  // 1. Registramos os schemas gerados pelo buildJsonSchemas
-  for (const schema of authSchemas) {
+  const schemas = [
+    ...authSchemas,
+    ...userSchemas,
+    ...tagSchemas,
+    ...offerSchemas,
+  ];
+
+  for (const schema of schemas) {
     app.addSchema(schema);
   }
 
-  // 2. Registramos os plugins
   app.register(cors, {
-    origin: '*', 
+    origin: '*',
   });
 
   app.register(fjwt, {
@@ -31,8 +41,8 @@ async function start() {
   app.register(swagger, {
     openapi: {
       info: {
-        title: 'UNIFConect TCC API',
-        description: 'API unificada para o projeto de TCC UNIFConect.',
+        title: 'UNIFConect API',
+        description: 'API unificada para o projeto UNIFConect.',
         version: '1.0.0',
       },
       components: {
@@ -50,15 +60,17 @@ async function start() {
     routePrefix: '/docs',
   });
 
-  // 3. Registramos nossas rotas
   app.register(authRoutes, { prefix: '/auth' });
+  app.register(userRoutes, { prefix: '/users' });
+  app.register(tagRoutes, { prefix: '/tags' });
+  app.register(offerRoutes, { prefix: '/offers' });
 
   try {
     await app.ready();
     app.swagger();
 
     await app.listen({ port: 3000, host: '0.0.0.0' });
-    console.log(`🚀 Servidor rodando em http://localhost:3000`);
+    console.log(`🚀 Servidor UNIFConect rodando em http://localhost:3000`);
     console.log(`📚 Documentação disponível em http://localhost:3000/docs`);
   } catch (err) {
     app.log.error(err);

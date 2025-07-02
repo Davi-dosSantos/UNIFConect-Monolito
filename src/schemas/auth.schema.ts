@@ -25,7 +25,7 @@ const loginResponseSchema = z.object({
   token: z.string(),
 });
 
-// Gera os schemas JSON para o Fastify e a função $ref
+
 export const { schemas: authSchemas, $ref } = buildJsonSchemas({
   createUserSchema,
   userResponseSchema,
@@ -33,6 +33,6 @@ export const { schemas: authSchemas, $ref } = buildJsonSchemas({
   loginResponseSchema,
 }, { $id: 'AuthSchema' });
 
-// Gera os tipos para usarmos no nosso controller
+
 export type CreateUserInput = z.infer<typeof createUserSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
