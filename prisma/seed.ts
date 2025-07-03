@@ -43,26 +43,220 @@ async function main() {
   });
 
   // 3. Cria as Tags (Matérias)
-  console.log("Criando tags...");
-  const tagCalculo = await prisma.tag.create({
-    data: { name: "Cálculo I", description: "Limites, derivadas e integrais" },
-  });
-
-  const tagPOO = await prisma.tag.create({
+  const tagOutros = await prisma.tag.create({
     data: {
-      name: "POO",
-      description: "Programação Orientada a Objetos com Java",
+      name: "OUTROS",
+      description: "OUTRAS MATERIAS NÃO LISTADAS",
     },
   });
 
-  const tagFisica = await prisma.tag.create({
-    data: { name: "Física II", description: "Eletromagnetismo e Ondas" },
+  const tagAlgebraLinear = await prisma.tag.create({
+    data: {
+      name: "ALGEBRA LINEAR",
+      description: "INSTITUTO DE CIÊNCIAS PURAS E APLICADAS",
+    },
   });
 
-  const tagFisicaQuantica = await prisma.tag.create({
+  const tagAlgoritmosEstruturaDados = await prisma.tag.create({
     data: {
-      name: "Física Quântica",
-      description: "Conceitos da física moderna",
+      name: "ALGORITMOS E ESTRUTURA DE DADOS I",
+      description: "INSTITUTO DE CIÊNCIAS TECNOLÓGICAS",
+    },
+  });
+
+  const tagAdministracao = await prisma.tag.create({
+    data: {
+      name: "ADMINISTRAÇÃO",
+      description: "INSTITUTO DE ENGENHARIAS INTEGRADAS",
+    },
+  });
+
+  const tagBusinessEnglish = await prisma.tag.create({
+    data: {
+      name: "BUSINESS ENGLISH I",
+      description: "INSTITUTO DE ENGENHARIA DE PRODUÇÃO E GESTÃO",
+    },
+  });
+
+  const tagAnaliseAlgoritmos = await prisma.tag.create({
+    data: {
+      name: "ANÁLISE DE ALGORITMOS",
+      description:
+        "INSTITUTO DE ENGENHARIA DE SISTEMAS E TECNOLOGIA DA INFORMAÇÃO",
+    },
+  });
+
+  const tagAerodinamica = await prisma.tag.create({
+    data: {
+      name: "AERODINÂMICA E DESEMPENHO DE AERONAVES",
+      description: "INSTITUTO DE ENGENHARIA MECÂNICA",
+    },
+  });
+
+  const tagAstrofisicaExtragalactica = await prisma.tag.create({
+    data: {
+      name: "ASTROFÍSICA EXTRAGALÁCTICA",
+      description: "INSTITUTO DE FÍSICA E QUÍMICA",
+    },
+  });
+
+  const tagAlgebraLinearAplicacoes = await prisma.tag.create({
+    data: {
+      name: "ÁLGEBRA LINEAR E APLICAÇÕES",
+      description: "INSTITUTO DE MATEMÁTICA E COMPUTACÃO",
+    },
+  });
+
+  const tagAgrometeorologia = await prisma.tag.create({
+    data: {
+      name: "AGROMETEOROLOGIA",
+      description: "INSTITUTO DE RECURSOS NATURAIS",
+    },
+  });
+
+  const tagAcionamentosEletricos = await prisma.tag.create({
+    data: {
+      name: "ACIONAMENTOS ELÉTRICOS",
+      description: "INSTITUTO DE SISTEMAS ELÉTRICOS E ENERGIA",
+    },
+  });
+
+  const tagCalculoNumerico = await prisma.tag.create({
+    data: {
+      name: "CÁLCULO NUMÉRICO",
+      description: "INSTITUTO DE CIÊNCIAS PURAS E APLICADAS",
+    },
+  });
+
+  const tagRedesIndustriais = await prisma.tag.create({
+    data: {
+      name: "REDES INDUSTRIAIS",
+      description: "INSTITUTO DE CIÊNCIAS TECNOLÓGICAS",
+    },
+  });
+
+  const tagBiomateriais = await prisma.tag.create({
+    data: {
+      name: "BIOMATERIAIS",
+      description: "INSTITUTO DE ENGENHARIAS INTEGRADAS",
+    },
+  });
+
+  const tagGestaoDaQualidade = await prisma.tag.create({
+    data: {
+      name: "GESTÃO DA QUALIDADE",
+      description: "INSTITUTO DE ENGENHARIA DE PRODUÇÃO E GESTÃO",
+    },
+  });
+
+  const tagEletromagnetismoAplicado = await prisma.tag.create({
+    data: {
+      name: "ELETROMAGNETISMO APLICADO",
+      description:
+        "INSTITUTO DE ENGENHARIA DE SISTEMAS E TECNOLOGIA DA INFORMAÇÃO",
+    },
+  });
+
+  const tagBiocombustiveis = await prisma.tag.create({
+    data: {
+      name: "BIOCOMBUSTÍVEIS",
+      description: "INSTITUTO DE ENGENHARIA MECÂNICA",
+    },
+  });
+
+  const tagBioquimica = await prisma.tag.create({
+    data: { name: "BIOQUÍMICA", description: "INSTITUTO DE FÍSICA E QUÍMICA" },
+  });
+
+  const tagBancoDeDados = await prisma.tag.create({
+    data: {
+      name: "BANCO DE DADOS I",
+      description: "INSTITUTO DE MATEMÁTICA E COMPUTACÃO",
+    },
+  });
+
+  const tagBioestatistica = await prisma.tag.create({
+    data: {
+      name: "BIOESTATÍSTICA",
+      description: "INSTITUTO DE RECURSOS NATURAIS",
+    },
+  });
+
+  const tagEletronicaDePotencia = await prisma.tag.create({
+    data: {
+      name: "ELETRÔNICA DE POTÊNCIA I",
+      description: "INSTITUTO DE SISTEMAS ELÉTRICOS E ENERGIA",
+    },
+  });
+
+  const tagFundamentosDeMecanica = await prisma.tag.create({
+    data: {
+      name: "FUNDAMENTOS DE MECÂNICA",
+      description: "INSTITUTO DE CIÊNCIAS PURAS E APLICADAS",
+    },
+  });
+
+  const tagSistemasEmbarcados = await prisma.tag.create({
+    data: {
+      name: "SISTEMAS EMBARCADOS E DE TEMPO REAL",
+      description: "INSTITUTO DE CIÊNCIAS TECNOLÓGICAS",
+    },
+  });
+
+  const tagEconomiaDosTransportes = await prisma.tag.create({
+    data: {
+      name: "ECONOMIA DOS TRANSPORTES",
+      description: "INSTITUTO DE ENGENHARIAS INTEGRADAS",
+    },
+  });
+
+  const tagLogisticaCadeiaSuprimentos = await prisma.tag.create({
+    data: {
+      name: "LOGÍSTICA E GESTÃO DA CADEIA DE SUPRIMENTOS",
+      description: "INSTITUTO DE ENGENHARIA DE PRODUÇÃO E GESTÃO",
+    },
+  });
+
+  const tagInteligenciaArtificial = await prisma.tag.create({
+    data: {
+      name: "INTELIGÊNCIA ARTIFICIAL",
+      description:
+        "INSTITUTO DE ENGENHARIA DE SISTEMAS E TECNOLOGIA DA INFORMAÇÃO",
+    },
+  });
+
+  const tagManutencaoMecanica = await prisma.tag.create({
+    data: {
+      name: "MANUTENÇÃO MECÂNICA",
+      description: "INSTITUTO DE ENGENHARIA MECÂNICA",
+    },
+  });
+
+  const tagQuimicaAmbiental = await prisma.tag.create({
+    data: {
+      name: "QUÍMICA AMBIENTAL",
+      description: "INSTITUTO DE FÍSICA E QUÍMICA",
+    },
+  });
+
+  const tagDesenvolvimentoDeJogos = await prisma.tag.create({
+    data: {
+      name: "DESENVOLVIMENTO DE JOGOS",
+      description: "INSTITUTO DE MATEMÁTICA E COMPUTACÃO",
+    },
+  });
+
+  const tagGeologiaPaleontologia = await prisma.tag.create({
+    data: {
+      name: "GEOLOGIA PALEONTOLOGIA",
+      description: "INSTITUTO DE RECURSOS NATURAIS",
+    },
+  });
+
+  const tagInstalacoesEletricas = await prisma.tag.create({
+    data: {
+      name: "INSTALAÇÕES ELÉTRICAS",
+      description: "INSTITUTO DE SISTEMAS ELÉTRICOS E ENERGIA",
     },
   });
 
@@ -70,13 +264,13 @@ async function main() {
   console.log("Criando ofertas...");
   const offerCalculo = await prisma.offer.create({
     data: {
-      title: "Monitoria de Cálculo para P1",
+      title: "Monitoria de Cálculo Numérico para P1",
       description:
         "Vamos resolver juntos as listas de exercícios e tirar todas as dúvidas para a prova.",
       slots: 5,
       offererId: beto.id,
       tags: {
-        connect: [{ id: tagCalculo.id }],
+        connect: [{ id: tagCalculoNumerico.id }],
       },
     },
   });
@@ -89,7 +283,7 @@ async function main() {
       slots: 10,
       offererId: ana.id,
       tags: {
-        connect: [{ id: tagPOO.id }],
+        connect: [{ id: tagBancoDeDados.id }],
       },
     },
   });
@@ -103,7 +297,7 @@ async function main() {
       slots: 2, // Apenas 2 vagas!
       offererId: carla.id,
       tags: {
-        connect: [{ id: tagFisicaQuantica.id }],
+        connect: [{ id: tagAstrofisicaExtragalactica.id }],
       },
     },
   });

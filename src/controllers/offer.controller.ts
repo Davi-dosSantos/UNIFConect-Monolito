@@ -1,6 +1,6 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
-import { prisma } from '../lib/prisma';
-import { CreateOfferInput } from '../schemas/offer.schema';
+import { FastifyRequest, FastifyReply } from "fastify";
+import { prisma } from "../lib/prisma";
+import { CreateOfferInput } from "../schemas/offer.schema";
 
 const offerWithSubscriptionCount = {
   include: {
@@ -14,6 +14,16 @@ const offerWithSubscriptionCount = {
   },
 };
 
+const offerInclude = {
+  offerer: {
+    select: { id: true, name: true },
+  },
+  tags: true,
+  _count: {
+    select: { subscriptions: true },
+  },
+};
+
 export async function createOfferHandler(
   request: FastifyRequest<{ Body: CreateOfferInput }>,
   reply: FastifyReply
@@ -21,43 +31,38 @@ export async function createOfferHandler(
   try {
     const { id: userId } = request.user as { id: string };
     const { title, description, slots, tagIds } = request.body;
-
     const offer = await prisma.offer.create({
       data: {
         title,
         description,
         slots,
         offererId: userId,
-        tags: {
-          connect: tagIds.map((id) => ({ id })),
-        },
+        tags: { connect: tagIds.map((id) => ({ id })) },
       },
-      ...offerWithSubscriptionCount,
+      include: offerInclude,
     });
-
     return reply.status(201).send(offer);
   } catch (error) {
     console.error(error);
-    return reply.status(500).send({ message: 'Erro ao criar oferta.' });
+    return reply.status(500).send({ message: "Erro ao criar oferta." });
   }
 }
 
-export async function getOffersHandler(request: FastifyRequest, reply: FastifyReply) {
+export async function getOffersHandler(
+  request: FastifyRequest,
+  reply: FastifyReply
+) {
   try {
     const offers = await prisma.offer.findMany({
-      ...offerWithSubscriptionCount,
-      orderBy: {
-        createdAt: 'desc',
-      },
+      include: offerInclude,
+      orderBy: { createdAt: "desc" },
     });
-
     return offers;
   } catch (error) {
     console.error(error);
-    return reply.status(500).send({ message: 'Erro ao buscar ofertas.' });
+    return reply.status(500).send({ message: "Erro ao buscar ofertas." });
   }
 }
-
 
 export async function getOfferByIdHandler(
   request: FastifyRequest<{ Params: { offerId: string } }>,
@@ -74,16 +79,15 @@ export async function getOfferByIdHandler(
     });
 
     if (!offer) {
-      return reply.status(404).send({ message: 'Oferta não encontrada.' });
+      return reply.status(404).send({ message: "Oferta não encontrada." });
     }
 
     return offer;
   } catch (error) {
     console.error(error);
-    return reply.status(500).send({ message: 'Erro ao buscar a oferta.' });
+    return reply.status(500).send({ message: "Erro ao buscar a oferta." });
   }
 }
-
 
 export async function getOffersByUserHandler(
   request: FastifyRequest<{ Params: { userId: string } }>,
@@ -102,19 +106,24 @@ export async function getOffersByUserHandler(
         tags: true,
       },
       orderBy: {
-        createdAt: 'desc',
+        createdAt: "desc",
       },
     });
 
     return offers;
   } catch (error) {
     console.error(error);
-    return reply.status(500).send({ message: 'Erro ao buscar ofertas do usuário.' });
+    return reply
+      .status(500)
+      .send({ message: "Erro ao buscar ofertas do usuário." });
   }
 }
 
 export async function updateOfferHandler(
-  request: FastifyRequest<{ Params: { offerId: string }; Body: CreateOfferInput }>,
+  request: FastifyRequest<{
+    Params: { offerId: string };
+    Body: CreateOfferInput;
+  }>,
   reply: FastifyReply
 ) {
   try {
@@ -127,11 +136,13 @@ export async function updateOfferHandler(
     });
 
     if (!offer) {
-      return reply.status(404).send({ message: 'Oferta não encontrada.' });
+      return reply.status(404).send({ message: "Oferta não encontrada." });
     }
 
     if (offer.offererId !== userId) {
-      return reply.status(403).send({ message: 'Você não tem permissão para editar esta oferta.' });
+      return reply
+        .status(403)
+        .send({ message: "Você não tem permissão para editar esta oferta." });
     }
 
     const updatedOffer = await prisma.offer.update({
@@ -152,7 +163,7 @@ export async function updateOfferHandler(
     return updatedOffer;
   } catch (error) {
     console.error(error);
-    return reply.status(500).send({ message: 'Erro ao atualizar oferta.' });
+    return reply.status(500).send({ message: "Erro ao atualizar oferta." });
   }
 }
 
@@ -169,11 +180,13 @@ export async function deleteOfferHandler(
     });
 
     if (!offer) {
-      return reply.status(404).send({ message: 'Oferta não encontrada.' });
+      return reply.status(404).send({ message: "Oferta não encontrada." });
     }
 
     if (offer.offererId !== userId) {
-      return reply.status(403).send({ message: 'Você não tem permissão para deletar esta oferta.' });
+      return reply
+        .status(403)
+        .send({ message: "Você não tem permissão para deletar esta oferta." });
     }
 
     await prisma.offer.delete({
@@ -183,6 +196,6 @@ export async function deleteOfferHandler(
     return reply.status(204).send();
   } catch (error) {
     console.error(error);
-    return reply.status(500).send({ message: 'Erro ao deletar oferta.' });
+    return reply.status(500).send({ message: "Erro ao deletar oferta." });
   }
 }
