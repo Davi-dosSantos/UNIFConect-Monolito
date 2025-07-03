@@ -104,6 +104,10 @@ export async function getOffersByUserHandler(
           select: { id: true, name: true },
         },
         tags: true,
+
+        _count: {
+          select: { subscriptions: true },
+        },
       },
       orderBy: {
         createdAt: "desc",
