@@ -7,42 +7,64 @@ import { pipeline } from "stream/promises";
 import { randomUUID } from "crypto";
 import type { MultipartFile } from "@fastify/multipart";
 
-interface CreateResourceBody {
-  title: MultipartFile;
-  description: MultipartFile;
-  tagIds: MultipartFile;
-}
-
-// Handler para criar um novo recurso
 export async function createResourceHandler(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
   try {
     const { id: userId } = request.user as { id: string };
-    const data = await request.file();
-    if (!data)
+    const parts = request.parts(); // Usamos o iterador de partes do formulário
+
+    let title = "";
+    let description = "";
+    let tagIds: string[] = [];
+    let savedFile: {
+      storageKey: string;
+      originalName: string;
+      path: string;
+      mimeType: string;
+      sizeInBytes: number;
+    } | null = null;
+
+    // Iteramos sobre cada parte do formulário
+    for await (const part of parts) {
+      if (part.type === "file") {
+        // Se a parte for o arquivo, nós o salvamos no disco
+        const fileExtension = path.extname(part.filename);
+        const newFileName = randomUUID().concat(fileExtension);
+        const uploadDir = path.join(__dirname, "..", "..", "uploads");
+        await fs.mkdir(uploadDir, { recursive: true }); // Garante que a pasta exista
+        const uploadPath = path.join(uploadDir, newFileName);
+
+        await pipeline(part.file, createWriteStream(uploadPath));
+
+        savedFile = {
+          storageKey: newFileName,
+          originalName: part.filename,
+          path: `/uploads/${newFileName}`,
+          mimeType: part.mimetype,
+          sizeInBytes: part.file.bytesRead,
+        };
+      } else {
+        // Se for um campo de texto, guardamos o valor na variável correspondente
+        if (part.fieldname === "title") {
+          title = part.value as string;
+        } else if (part.fieldname === "description") {
+          description = part.value as string;
+        } else if (part.fieldname === "tagIds") {
+          tagIds = (part.value as string).split(",");
+        }
+      }
+    }
+
+    if (!savedFile) {
       return reply.status(400).send({ message: "Nenhum arquivo enviado." });
+    }
 
-    const fields = data.fields as unknown as CreateResourceBody;
-    const title = (await fields.title.toBuffer()).toString();
-    const description = (await fields.description.toBuffer()).toString();
-    const tagIds = (await fields.tagIds.toBuffer()).toString().split(",");
-
-    const fileExtension = path.extname(data.filename);
-    const newFileName = randomUUID().concat(fileExtension);
-    const uploadDir = path.join(__dirname, "..", "..", "uploads");
-    const uploadPath = path.join(uploadDir, newFileName);
-
-    await pipeline(data.file, createWriteStream(uploadPath));
-
+    // --- Lógica de Banco de Dados (agora com os dados corretos) ---
     const file = await prisma.file.create({
       data: {
-        originalName: data.filename,
-        storageKey: newFileName,
-        path: `/uploads/${newFileName}`,
-        mimeType: data.mimetype,
-        sizeInBytes: data.file.bytesRead,
+        ...savedFile,
         uploaderId: userId,
       },
     });
@@ -53,7 +75,9 @@ export async function createResourceHandler(
         description: description,
         uploaderId: userId,
         fileId: file.id,
-        tags: { connect: tagIds.map((id) => ({ id })) },
+        tags: {
+          connect: tagIds.map((id) => ({ id })),
+        },
       },
       include: {
         file: true,
@@ -69,7 +93,6 @@ export async function createResourceHandler(
   }
 }
 
-// Handler para listar todos os recursos
 export async function getResourcesHandler(
   request: FastifyRequest,
   reply: FastifyReply
@@ -90,7 +113,7 @@ export async function getResourcesHandler(
   }
 }
 
-// --- NOVO HANDLER: ATUALIZAR UM RECURSO ---
+// ---  HANDLER: ATUALIZAR UM RECURSO ---
 export async function updateResourceHandler(
   request: FastifyRequest<{ Params: { resourceId: string }; Body: any }>,
   reply: FastifyReply
@@ -135,7 +158,6 @@ export async function updateResourceHandler(
   }
 }
 
-// --- NOVO HANDLER: DELETAR UM RECURSO ---
 export async function deleteResourceHandler(
   request: FastifyRequest<{ Params: { resourceId: string } }>,
   reply: FastifyReply
