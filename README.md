@@ -27,54 +27,50 @@ O backend é responsável por toda a lógica de negócio, gerenciamento de dados
 -   **Banco de Dados:** [PostgreSQL](https://www.postgresql.org/)
 -   **ORM:** [Prisma ORM](https://www.prisma.io/)
 -   **Autenticação:** [JSON Web Token (JWT)](https://jwt.io/)
--   **Documentação:** [Swagger / OpenAPI](https://swagger.io/)
+-   **Containerização:** [Docker](https://www.docker.com/)
 
 ## ⚙️ Guia de Instalação e Execução
 
-Para executar o backend localmente, siga os passos abaixo.
+Você pode executar o projeto de duas formas: localmente ou utilizando Docker.
 
-### Pré-requisitos
+### 1. Executando Localmente
+
+#### Pré-requisitos
 
 -   [Node.js](https://nodejs.org/en/) (versão 18 ou superior)
 -   [NPM](https://www.npmjs.com/) ou [Yarn](https://yarnpkg.com/)
--   Uma instância do **PostgreSQL** rodando localmente ou em um container Docker.
+-   Uma instância do **PostgreSQL** rodando localmente.
 
-### Passos
+#### Passos
 
-1.  **Clone o repositório:**
+1.  **Clone o repositório e acesse o diretório:**
     ```bash
     git clone [https://github.com/Davi-dosSantos/UNIFConect-backend.git](https://github.com/Davi-dosSantos/UNIFConect-backend.git)
-    ```
-
-2.  **Acesse o diretório do projeto:**
-    ```bash
     cd unifconect-backend
     ```
 
-3.  **Instale as dependências:**
+2.  **Instale as dependências:**
     ```bash
     npm install
     ```
 
-4.  **Configure as variáveis de ambiente:**
-    -   Crie um arquivo `.env` na raiz do projeto, baseado no arquivo `.env.example` (se houver) ou use o modelo abaixo.
-    -   Você **PRECISA** preencher a `DATABASE_URL` com a string de conexão do seu banco PostgreSQL.
+3.  **Configure as variáveis de ambiente:**
+    -   Crie um arquivo `.env` na raiz do projeto. Você **PRECISA** preencher a `DATABASE_URL` com a string de conexão do seu banco PostgreSQL.
     ```env
-    # String de conexão do seu banco de dados PostgreSQL
-    # Formato: postgresql://USER:PASSWORD@HOST:PORT/DATABASE
-    DATABASE_URL="postgresql://docker:docker@localhost:5432/unifconect"
-
-    # Chave secreta para assinar os tokens JWT
+    DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE"
     JWT_SECRET="sua-chave-secreta-super-segura"
-
-    # Porta em que o servidor irá rodar
     PORT=3333
     ```
 
-5.  **Execute as migrações do banco de dados:**
-    -   Este comando irá criar as tabelas no seu banco de dados com base no schema do Prisma.
+4.  **Execute as migrações do banco de dados:**
     ```bash
     npx prisma migrate dev
+    ```
+
+5.  **(Opcional) Popule o banco com dados iniciais:**
+    - Se o seu projeto tiver um arquivo de seed configurado no `package.json`, execute o comando abaixo.
+    ```bash
+    npx prisma db seed
     ```
 
 6.  **Inicie o servidor de desenvolvimento:**
@@ -84,13 +80,36 @@ Para executar o backend localmente, siga os passos abaixo.
 
 ✅ O backend estará rodando em `http://localhost:3333`.
 
+### 2. Executando com Docker
+
+Como alternativa, se você possui Docker e Docker Compose instalados, pode iniciar todo o ambiente (API + Banco de Dados) com poucos comandos.
+
+1.  **Clone o repositório e acesse o diretório.**
+
+2.  **Configure as variáveis de ambiente:**
+    - Crie o arquivo `.env` como no passo anterior. Para o Docker, o `HOST` da `DATABASE_URL` geralmente é o nome do serviço do banco de dados no arquivo `docker-compose.yml` (ex: `postgres`).
+
+3.  **Suba os contêineres:**
+    - O comando abaixo irá construir as imagens e iniciar os serviços em background.
+    ```bash
+    docker-compose up -d --build
+    ```
+
+4.  **(Opcional) Popule o banco com dados iniciais:**
+    - Com os contêineres em execução, execute o comando de seed dentro do contêiner da API.
+    ```bash
+    docker-compose exec api npx prisma db seed
+    ```
+
+✅ O backend estará rodando em `http://localhost:3333` e conectado ao banco de dados do Docker.
+
 ## 📖 API
 
-A documentação da API, gerada pelo Swagger, estará disponível em `http://localhost:3333/docs` após iniciar o servidor.
+A documentação da API (Swagger) estará disponível em `http://localhost:3333/docs` após iniciar o servidor.
 
 ## 📄 Licença
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+Este projeto está sob a licença MIT.
 
 ---
 **Desenvolvido por Davi dos Santos Costa**
