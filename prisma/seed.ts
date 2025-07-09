@@ -7,12 +7,12 @@ async function main() {
   console.log("Iniciando o processo de seeding...");
 
   // 1. Limpa as tabelas existentes
-  console.log("Limpando dados antigos...");
-  await prisma.subscription.deleteMany();
-  await prisma.offer.deleteMany();
-  await prisma.tag.deleteMany();
-  await prisma.profile.deleteMany();
-  await prisma.user.deleteMany();
+  //console.log("Limpando dados antigos...");
+  //await prisma.subscription.deleteMany();
+  //await prisma.offer.deleteMany();
+  //await prisma.tag.deleteMany();
+  //await prisma.profile.deleteMany();
+  // await prisma.user.deleteMany();
 
   // 2. Cria os usuários de exemplo
   console.log("Criando usuários...");
