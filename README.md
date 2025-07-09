@@ -5,29 +5,29 @@
 ![Database](https://img.shields.io/badge/Database-PostgreSQL-blue?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
-[cite_start]Este é o repositório do backend da **UnifConect**, uma plataforma colaborativa projetada para facilitar a interação e o compartilhamento de conhecimento na comunidade acadêmica. [cite: 20, 93] [cite_start]O sistema foi concebido para ser modular, escalável e centrado no usuário, promovendo um espaço de colaboração e acolhimento entre estudantes. [cite: 84]
+Este é o repositório do backend da **UnifConect**, uma plataforma colaborativa projetada para facilitar a interação e o compartilhamento de conhecimento na comunidade acadêmica. O sistema foi concebido para ser modular, escalável e centrado no usuário, promovendo um espaço de colaboração e acolhimento entre estudantes.
 
-[cite_start]Originalmente projetado em uma arquitetura de microserviços, o protótipo funcional validado foi implementado em uma arquitetura monolítica para garantir agilidade no desenvolvimento e na entrega de valor. [cite: 23, 335]
+Originalmente projetado em uma arquitetura de microserviços, o protótipo funcional validado foi implementado em uma arquitetura monolítica para garantir agilidade no desenvolvimento e na entrega de valor.
 
 ## ✨ Funcionalidades
 
 O backend é responsável por toda a lógica de negócio, gerenciamento de dados e segurança da aplicação. Suas principais responsabilidades incluem:
 
--   [cite_start]**Serviço de Autenticação:** Gerenciamento de cadastro e login de usuários com tokens JWT. [cite: 540]
--   [cite_start]**Serviço de Usuários e Perfis:** Gerenciamento completo dos perfis dos estudantes. [cite: 563]
--   [cite_start]**Serviço de Ofertas:** Orquestração da criação, listagem e busca por ofertas de atividades. [cite: 567]
--   [cite_start]**Serviço de Recursos:** Gerenciamento do acervo de materiais de estudo, incluindo upload e recuperação de arquivos. [cite: 571]
--   [cite_start]**Documentação de API:** Geração automática de documentação interativa com Swagger/OpenAPI. [cite: 201]
+-   **Serviço de Autenticação:** Gerenciamento de cadastro e login de usuários com tokens JWT.
+-   **Serviço de Usuários e Perfis:** Gerenciamento completo dos perfis dos estudantes.
+-   **Serviço de Ofertas:** Orquestração da criação, listagem e busca por ofertas de atividades.
+-   **Serviço de Recursos:** Gerenciamento do acervo de materiais de estudo, incluindo upload e recuperação de arquivos.
+-   **Documentação de API:** Geração automática de documentação interativa com Swagger/OpenAPI.
 
 ## 🛠️ Tecnologias Utilizadas
 
--   [cite_start]**Linguagem:** [TypeScript](https://www.typescriptlang.org/) [cite: 139]
+-   **Linguagem:** [TypeScript](https://www.typescriptlang.org/)
 -   **Ambiente de Execução:** [Node.js](https://nodejs.org/en/)
--   [cite_start]**Framework:** [Fastify](https://www.fastify.io/) [cite: 179]
--   [cite_start]**Banco de Dados:** [PostgreSQL](https://www.postgresql.org/) [cite: 103]
--   [cite_start]**ORM:** [Prisma ORM](https://www.prisma.io/) [cite: 146]
--   [cite_start]**Autenticação:** [JSON Web Token (JWT)](https://jwt.io/) [cite: 190]
--   [cite_start]**Documentação:** [Swagger / OpenAPI](https://swagger.io/) [cite: 199]
+-   **Framework:** [Fastify](https://www.fastify.io/)
+-   **Banco de Dados:** [PostgreSQL](https://www.postgresql.org/)
+-   **ORM:** [Prisma ORM](https://www.prisma.io/)
+-   **Autenticação:** [JSON Web Token (JWT)](https://jwt.io/)
+-   **Documentação:** [Swagger / OpenAPI](https://swagger.io/)
 
 ## ⚙️ Guia de Instalação e Execução
 
@@ -43,7 +43,7 @@ Para executar o backend localmente, siga os passos abaixo.
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/seu-usuario/unifconect-backend.git](https://github.com/seu-usuario/unifconect-backend.git)
+    git clone [https://github.com/Davi-dosSantos/UNIFConect-backend.git](https://github.com/Davi-dosSantos/UNIFConect-backend.git)
     ```
 
 2.  **Acesse o diretório do projeto:**
